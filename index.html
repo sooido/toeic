@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Coach</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">AI Reading Trainer</p>
+      <h1>영어 독해 약점을 겨냥한 문제 생성기</h1>
+      <p class="hero-copy">
+        주체와 객체 바꿔 묻기, 문장 간 연결 추론, 시점이 섞인 이중지문 함정을
+        집중적으로 연습할 수 있게 설계했습니다.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>생성 설정</h2>
+        <p>OpenAI API 키는 브라우저에 저장하지 않고 로컬 서버에만 전달됩니다.</p>
+      </div>
+
+      <form id="generator-form" class="config-grid">
+        <label>
+          <span>OpenAI API Key</span>
+          <input id="apiKey" name="apiKey" type="password" placeholder="sk-..." required>
+        </label>
+
+        <label>
+          <span>모델</span>
+          <input id="model" name="model" type="text" value="gpt-4.1-mini" required>
+        </label>
+
+        <label>
+          <span>문제 유형</span>
+          <select id="setType" name="setType">
+            <option value="single">단일 지문</option>
+            <option value="double">이중 지문</option>
+            <option value="mixed">혼합</option>
+          </select>
+        </label>
+
+        <label>
+          <span>난이도</span>
+          <select id="difficulty" name="difficulty">
+            <option value="easy">기초</option>
+            <option value="medium" selected>중간</option>
+            <option value="hard">고난도</option>
+          </select>
+        </label>
+
+        <label>
+          <span>문항 수</span>
+          <input id="questionCount" name="questionCount" type="number" min="3" max="10" value="5">
+        </label>
+
+        <label>
+          <span>지문 길이</span>
+          <select id="passageLength" name="passageLength">
+            <option value="short">짧게</option>
+            <option value="medium" selected>보통</option>
+            <option value="long">길게</option>
+          </select>
+        </label>
+
+        <fieldset class="focus-box">
+          <legend>집중 훈련 포인트</legend>
+          <label class="check-row">
+            <input type="checkbox" name="focus" value="subject-object" checked>
+            <span>주체/객체 바꿔 묻기</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="focus" value="cross-sentence" checked>
+            <span>한 문장 읽고 다음 문장 추론</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="focus" value="timeline-trap" checked>
+            <span>시제와 적용 시점 함정</span>
+          </label>
+        </fieldset>
+
+        <label class="full-width">
+          <span>추가 요청</span>
+          <textarea id="extraInstruction" name="extraInstruction" rows="4" placeholder="예: 토익 파트 7 느낌으로, 보기 4개, 한국어 해설 포함"></textarea>
+        </label>
+
+        <button id="generateButton" type="submit">문제 생성하기</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>생성 결과</h2>
+        <p>답안을 직접 선택한 뒤 채점과 해설을 볼 수 있습니다.</p>
+      </div>
+
+      <div id="status" class="status">설정을 입력하고 문제를 생성하세요.</div>
+      <div id="result" class="result hidden"></div>
+      <div id="actions" class="actions hidden">
+        <button id="gradeButton" type="button">채점하기</button>
+        <button id="resetButton" type="button" class="ghost">새로 시작</button>
+      </div>
+    </section>
+  </main>
+
+  <template id="question-template">
+    <article class="question-card">
+      <div class="question-meta">
+        <span class="chip"></span>
+      </div>
+      <h3 class="question-text"></h3>
+      <div class="options"></div>
+      <div class="feedback hidden"></div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
